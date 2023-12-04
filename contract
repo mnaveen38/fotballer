@@ -1,0 +1,24 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract FootballTournament {
+    address public goldMedalist;
+    mapping(address => uint) public footballerGoals;
+
+    event NewMedalistFootballer(address indexed footballer, uint totalGoals);
+
+    function declareMedalistFootballer(address footballer, uint totalGoals) public {
+        assert(totalGoals > 0);
+
+        footballerGoals[footballer] = totalGoals;
+
+        require(footballer != goldMedalist, "Footballer is already the current medalist");
+
+        if (totalGoals > footballerGoals[goldMedalist]) {
+            goldMedalist = footballer;
+            emit NewMedalistFootballer(goldMedalist, totalGoals);
+        } else {
+            revert("Footballer did not beat  the current medalist footballer's total goals");
+        }
+    }
+}
